@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Post Maker</title>
+    <link href="./dist/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Pacifico&family=Sacramento&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropme@latest/dist/cropme.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/cropme@latest/dist/cropme.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+</head>
+
+<body class="flex flex-col items-center bg-white md:bg-slate-100 justify-normal md:justify-center min-h-screen">
+    <div id="first_class"
+        class="w-full flex flex-col md:block justify-between border-gray-200 rounded-none my-4 md:my-10 border-0 md:border md:rounded-lg shadow-transparent md:shadow-md sm:min-w-[512px] md:max-w-lg md:self-center">
+        <header>
+            <h2 class="py-3 text-xl font-bold leading-9 tracking-tight text-center text-gray-900 bg-neutral-200" data-aos="fade-down">Happy Birthday Post Maker</h2>
+            <p class="text-sm text-center text-gray-500" data-aos="fade-down">Create your own Social Media post with this <a style="color: red;" href="https://sdvisionart.com/"> SD Vision</a> </p>
+            <div class="hidden" id="preview-canvas-container"> 
+                <canvas id="preview-canvas" width="100%" class="w-full border"></canvas>
+            </div>
+            <div class="hidden" id="preview-canvas-container-download">
+                <canvas id="preview-canvas-download" class="w-full border"></canvas>
+            </div>
+            <img id="banner-img" class="h-auto w-full" src="./100-matdan.jpg" style="display: none;" alt="">
+        </header>
+        <div class="px-6 pt-2 pb-8 md:pt-2.5 bg-slate-50" data-aos="fade-up">
+            <form id="first_form">
+                <div class="space-y-6">
+                    <div class="flex flex-col justify-center items-center" style="flex-direction: column-reverse; gap: 30px;">
+                        <label for="dropzone-file" style="border-radius: 4.3rem; height: 10rem;"
+                            class="flex flex-col justify-center items-center w-full md:h-48 border-2 border-gray-300 border-dashed cursor-pointer bg-gray-50 hover:bg-gray-100">
+                            <div id="dropzone-file-container" class="flex flex-col justify-center items-center pt-5 pb-6">
+                                <i class="fas fa-upload mb-2 text-gray-500" style="font-size: 2rem;"></i>
+                                <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p class="text-xs text-gray-500">PNG, JPG</p>
+                            </div>
+                            <input id="dropzone-file" type="file" class="hidden" accept="image/*" onchange="readURL(this)">
+                        </label>
+
+                        <div class="flex h-10 justify-center items-center">
+                            <div id="container" class="flex flex-col items-center mt-4 text-gray-400"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="mt-2">
+                            <input type="text" name="text1" id="text1"
+                                class="block w-full rounded-lg border border-gray-300 py-2 px-4 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none sm:text-sm sm:leading-6"
+                                placeholder="Your Name" required>
+                        </div>
+                    </div>
+                    <button type="submit"
+                        class="btn flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        style="background-color: red;margin-top: 15px;margin-bottom: 15px;">
+                        <span class="btn-text-one" style="border-radius: 40px;">Upload Image</span>
+                        <span class="btn-text-two">Make Post!</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div id="btn-action-group" class="hidden md:space-y-6 py-6 px-6 md:flex flex-col justify-between bg-slate-50" data-aos="fade-up">
+            <button onclick="downloadCanvas()"
+                class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                style="margin-bottom: 8px; background-color: red; gap: 10px;">
+                <i class="fas fa-download" aria-hidden="true"></i> Download
+            </button>
+            <button onclick="shareCanvas()"
+                class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                style="margin-bottom: 8px; background-color: red; gap: 10px;">
+                <i class="fas fa-share" aria-hidden="true"></i> Share
+            </button>
+            <button onclick="handleBack()"
+                class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                style="margin-bottom: 8px; background-color: red; gap: 10px;">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> Back
+            </button>
+        </div>
+
+        <p class="p-3 text-sm text-center bg-neutral-200" style="margin: 0;">
+            Powered by
+            <a target="_blank" href="https://sdvisionart.com/"
+                class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                style="color: red;text-decoration: none;">SD Vision</a>
+        </p>
+    </div>
+    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+
+    <!-- AOS JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+    <script src="app.js"></script>
+
+
+</body>
+
+</html>
