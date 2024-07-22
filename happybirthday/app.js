@@ -77,7 +77,7 @@ function initializeCropme(Width, Height) {
     const cropmeConfig = {
         container: {
             width: 250,
-            height: 200,
+            height: 9,
         },
         viewport: {
             width: containerAspectRatio >= 1 ? 115 : 115 * containerAspectRatio,
